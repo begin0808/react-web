@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, Copy, Check, ChevronRight, Cpu, Globe, Rocket, Github, Layers, Code, Save, Zap, AlertTriangle, Wrench, XCircle, Info, ExternalLink, AlertCircle, FileJson, FileCode, Command } from 'lucide-react';
+import { Terminal, Copy, Check, ChevronRight, Cpu, Globe, Rocket, Github, Layers, Code, Save, Zap, AlertTriangle, Wrench, XCircle, Info, ExternalLink, AlertCircle, FileJson, FileCode, Command, ArrowUp } from 'lucide-react';
 
 // --- Data Content from the User's Document & CSV ---
 // Added 'mode' to code blocks: 'command' | 'full' | 'partial'
@@ -234,7 +234,17 @@ export default defineConfig({
       {
         type: "step",
         stepTitle: "2. 主程式開發 & 測試",
-        text: "修改 src/App.jsx 貼入程式碼。執行 npm run dev 於 http://localhost:5173 測試。"
+        text: "修改 src/App.jsx 貼入程式碼，接著在終端機啟動測試："
+      },
+      {
+        type: "code",
+        lang: "bash",
+        mode: "command",
+        code: `npm run dev`
+      },
+      {
+        type: "text",
+        text: "伺服器啟動後，請打開瀏覽器前往 http://localhost:5173 進行測試。"
       }
     ]
   },
@@ -689,6 +699,47 @@ const Hero = () => (
   </div>
 );
 
+// --- New Scroll To Top Component ---
+const ScrollToTop = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Toggle visibility depending on scroll position
+  const toggleVisibility = () => {
+    if (window.pageYOffset > 300) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  // Scroll smoothly to top
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  return (
+    <div className="fixed bottom-8 right-8 z-50 transition-all duration-300">
+      {isVisible && (
+        <button
+          onClick={scrollToTop}
+          className="bg-cyan-600 hover:bg-cyan-500 text-white p-3 rounded-full shadow-[0_0_20px_rgba(8,145,178,0.6)] transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(34,211,238,0.8)] focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          aria-label="Back to Top"
+        >
+          <ArrowUp size={24} />
+        </button>
+      )}
+    </div>
+  );
+};
+
 const Footer = () => (
   <footer className="border-t border-gray-800 bg-black py-12 text-center text-gray-500 text-sm relative overflow-hidden">
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
@@ -742,6 +793,7 @@ export default function App() {
       </main>
 
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }
